@@ -18,6 +18,12 @@ module Doorkeeper
       end
 
       def uses_private_key_jwt?
+        # Checks token_endpoint_auth_method rather than jwks.present? because
+        # the presence of a JWKS only means public keys are stored — it does not
+        # represent the pre-agreed authentication method between server and client.
+        # Note: this enforcement is currently one-sided; other auth methods such as
+        # client_secret_basic are not constrained by token_endpoint_auth_method.
+        # See: https://github.com/upinetree/doorkeeper-client_assertion/issues/10
         respond_to?(:token_endpoint_auth_method) && token_endpoint_auth_method == 'private_key_jwt'
       end
 

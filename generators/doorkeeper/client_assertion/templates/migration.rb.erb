@@ -1,6 +1,15 @@
 class AddClientAssertionToDoorkeeperApplications < ActiveRecord::Migration<%= migration_version %>
   def change
+    # Stores the client's public keys as a JSON Web Key Set (JWKS).
     add_column :oauth_applications, :jwks, :text
+
+    # Records the authentication method agreed between server and client at registration
+    # (e.g. 'private_key_jwt', 'client_secret_basic'). Serves as an explicit opt-in gate
+    # for private_key_jwt: an application is only eligible for JWT authentication when
+    # this column is set to 'private_key_jwt', even if jwks is present.
+    # If this column is absent, private_key_jwt authentication is skipped and
+    # the request falls through to Doorkeeper's built-in client authentication.
+    # See: https://github.com/upinetree/doorkeeper-client_assertion/issues/10
     add_column :oauth_applications, :token_endpoint_auth_method, :string
 
     # TODO: Remove this line once doorkeeper-gem/doorkeeper#1775 is released
