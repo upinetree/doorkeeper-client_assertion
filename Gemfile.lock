@@ -2,7 +2,7 @@ PATH
   remote: .
   specs:
     doorkeeper-client_assertion (0.1.0)
-      doorkeeper (>= 5.5, < 6.0)
+      doorkeeper (>= 5.9, < 6.0)
       jwt (>= 2.5)
 
 GEM

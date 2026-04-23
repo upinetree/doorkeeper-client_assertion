@@ -10,19 +10,19 @@
 
 ## Installation
 
-Generate and run the migration to add `jwks` and `token_endpoint_auth_method` columns to `oauth_applications`:
+Generate and run the migrations:
 
 ```sh
 rails generate doorkeeper:client_assertion:migration
+rails generate doorkeeper:remove_application_secret_not_null_constraint
 rake db:migrate
 ```
 
-This migration adds:
+The first migration adds:
 - `jwks` — stores the client's public keys as a JSON Web Key Set
-- `token_endpoint_auth_method` — specifies the authentication method (`private_key_jwt`, `client_secret_basic`, etc.)
-- Removes the NOT NULL constraint from `secret` (JWT authentication does not require a client secret)
+- `token_endpoint_auth_method` — records the authentication method agreed at registration (`private_key_jwt`, `client_secret_basic`, etc.)
 
-> **Note**: The `change_column_null` for `secret` duplicates `rails generate doorkeeper:remove_application_secret_not_null_constraint` (see TODO below).
+The second migration removes the NOT NULL constraint from `secret`, which is required because `private_key_jwt` clients do not use a client secret.
 
 Configure the gem in an initializer (TODO: install generator not yet implemented — create manually for now):
 
