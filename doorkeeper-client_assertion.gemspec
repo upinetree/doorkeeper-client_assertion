@@ -20,7 +20,7 @@ Gem::Specification.new do |spec|
     'changelog_uri'   => "#{spec.homepage}/blob/main/CHANGELOG.md",
   }
 
-  spec.files         = Dir['{lib,generators}/**/*', 'README.md', 'CHANGELOG.md', 'LICENSE.txt']
+  spec.files         = Dir['lib/**/*', 'README.md', 'CHANGELOG.md', 'LICENSE.txt']
   spec.require_paths = ['lib']
 
   spec.required_ruby_version = '>= 3.1'

@@ -24,15 +24,10 @@ The first migration adds:
 
 The second migration removes the NOT NULL constraint from `secret`, which is required because `private_key_jwt` clients do not use a client secret.
 
-Configure the gem in an initializer (TODO: install generator not yet implemented — create manually for now):
+Generate the initializer:
 
-```ruby
-# config/initializers/doorkeeper_client_assertion.rb
-Doorkeeper::ClientAssertion.configure do
-  # client_assertion_algorithms %w[RS256 ES256]
-  # jwt_assertion_exp_tolerance 300
-  # on_jwt_verification_failure ->(error, context) { }
-end
+```sh
+rails generate doorkeeper:client_assertion:install
 ```
 
 ## Configuration
