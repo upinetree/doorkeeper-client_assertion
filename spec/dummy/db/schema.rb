@@ -1,4 +1,4 @@
-ActiveRecord::Schema[8.0].define(version: 2026_04_21_000000) do
+ActiveRecord::Schema[7.2].define(version: 2026_04_21_000000) do
   create_table "oauth_access_grants", force: :cascade do |t|
     t.integer "resource_owner_id", null: false
     t.integer "application_id", null: false
