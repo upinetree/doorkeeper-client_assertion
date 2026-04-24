@@ -11,7 +11,7 @@ Doorkeeper::ClientAssertion.configure do
 
   # Callback invoked when JWT verification fails. Useful for logging or monitoring.
   # Default: no-op
-  # on_jwt_verification_failure ->(error, context) do
+  # on_jwt_verification_failure do |error, context|
   #   Rails.logger.warn "[ClientAssertion] #{error.class}: #{error.message} (app: #{context[:application_id]})"
   # end
 end

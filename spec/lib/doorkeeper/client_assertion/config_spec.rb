@@ -34,4 +34,29 @@ describe Doorkeeper::ClientAssertion, 'configuration' do
       expect(subject.jwt_assertion_exp_tolerance).to eq(custom_tolerance)
     end
   end
+
+  describe 'on_jwt_verification_failure' do
+    it 'defaults to a no-op' do
+      Doorkeeper::ClientAssertion.configure {}
+      expect(subject.on_jwt_verification_failure.call(nil, {})).to be_nil
+    end
+
+    it 'can be set with a lambda' do
+      Doorkeeper::ClientAssertion.configure do
+        on_jwt_verification_failure ->(error, context) { [error, context] }
+      end
+      error = StandardError.new
+      result = subject.on_jwt_verification_failure.call(error, { application_id: 1 })
+      expect(result).to eq([error, { application_id: 1 }])
+    end
+
+    it 'can be set with a block' do
+      Doorkeeper::ClientAssertion.configure do
+        on_jwt_verification_failure { |error, context| [error, context] }
+      end
+      error = StandardError.new
+      result = subject.on_jwt_verification_failure.call(error, { application_id: 1 })
+      expect(result).to eq([error, { application_id: 1 }])
+    end
+  end
 end

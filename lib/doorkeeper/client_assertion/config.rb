@@ -10,8 +10,10 @@ module Doorkeeper
       }.freeze
 
       DEFAULTS.each_key do |option|
-        define_method(option) do |value = :__unset__|
-          if value == :__unset__
+        define_method(option) do |value = :__unset__, &block|
+          if block
+            instance_variable_set("@#{option}", block)
+          elsif value == :__unset__
             instance_variable_defined?("@#{option}") ? instance_variable_get("@#{option}") : DEFAULTS[option]
           else
             instance_variable_set("@#{option}", value)
