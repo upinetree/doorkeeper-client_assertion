@@ -10,7 +10,7 @@ Gem::Specification.new do |spec|
 
   spec.summary     = 'private_key_jwt client authentication for Doorkeeper'
   spec.description = 'Adds RFC 7523 / OpenID Connect private_key_jwt client authentication to Doorkeeper.'
-  spec.homepage    = 'https://github.com/doorkeeper-gem/doorkeeper-client_assertion'
+  spec.homepage    = 'https://github.com/upinetree/doorkeeper-client_assertion'
   spec.license     = 'MIT'
 
   spec.metadata = {
