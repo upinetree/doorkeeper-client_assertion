@@ -28,34 +28,30 @@ module Doorkeeper
         respond_to?(:token_endpoint_auth_method) && token_endpoint_auth_method == 'private_key_jwt'
       end
 
+      def self.prepended(base)
+        base.validate :jwks_format, if: -> { uses_private_key_jwt? }
+      end
+
       private
 
       def secret_required?
         !uses_private_key_jwt? && super
       end
 
-      def self.prepended(base)
-        base.class_eval do
-          validate :jwks_format, if: -> { uses_private_key_jwt? }
-
-          private
-
-          def jwks_format
-            if jwks.blank?
-              errors.add(:jwks, 'must be present when using private_key_jwt')
-              return
-            end
-
-            parsed = JSON.parse(jwks)
-            unless parsed.is_a?(Hash)
-              errors.add(:jwks, 'must be a JSON object')
-              return
-            end
-            errors.add(:jwks, 'must have a keys array') unless parsed.key?('keys')
-          rescue JSON::ParserError
-            errors.add(:jwks, 'must be valid JSON')
-          end
+      def jwks_format
+        if jwks.blank?
+          errors.add(:jwks, 'must be present when using private_key_jwt')
+          return
         end
+
+        parsed = JSON.parse(jwks)
+        unless parsed.is_a?(Hash)
+          errors.add(:jwks, 'must be a JSON object')
+          return
+        end
+        errors.add(:jwks, 'must have a keys array') unless parsed.key?('keys')
+      rescue JSON::ParserError
+        errors.add(:jwks, 'must be valid JSON')
       end
     end
   end
