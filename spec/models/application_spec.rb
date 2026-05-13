@@ -58,6 +58,25 @@ describe Doorkeeper::ClientAssertion::ApplicationExtension do
         expect { application.public_keys }.to raise_error(Doorkeeper::ClientAssertion::Errors::InvalidJwks, /must contain a keys array/)
       end
     end
+
+    context 'when jwks is a JSON array' do
+      it 'raises InvalidJwks error' do
+        application.jwks = '[]'
+        expect { application.public_keys }.to raise_error(Doorkeeper::ClientAssertion::Errors::InvalidJwks, /must be a JSON object/)
+      end
+    end
+
+    context 'when jwks is a non-object JSON value' do
+      it 'raises InvalidJwks error for a string value' do
+        application.jwks = '"text"'
+        expect { application.public_keys }.to raise_error(Doorkeeper::ClientAssertion::Errors::InvalidJwks, /must be a JSON object/)
+      end
+
+      it 'raises InvalidJwks error for a numeric value' do
+        application.jwks = '42'
+        expect { application.public_keys }.to raise_error(Doorkeeper::ClientAssertion::Errors::InvalidJwks, /must be a JSON object/)
+      end
+    end
   end
 
   describe '#uses_private_key_jwt?' do
@@ -138,6 +157,18 @@ describe Doorkeeper::ClientAssertion::ApplicationExtension do
         application.jwks = '{"foo": "bar"}'
         expect(application).not_to be_valid
         expect(application.errors[:jwks]).to include('must have a keys array')
+      end
+
+      it 'is invalid when jwks is a JSON array' do
+        application.jwks = '[]'
+        expect(application).not_to be_valid
+        expect(application.errors[:jwks]).to include('must be a JSON object')
+      end
+
+      it 'is invalid when jwks is a non-object JSON value' do
+        application.jwks = '"text"'
+        expect(application).not_to be_valid
+        expect(application.errors[:jwks]).to include('must be a JSON object')
       end
 
       it 'is valid with proper jwks' do

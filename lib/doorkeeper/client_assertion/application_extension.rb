@@ -10,7 +10,8 @@ module Doorkeeper
         return [] if jwks.blank?
 
         jwks_hash = JSON.parse(jwks)
-        raise InvalidJwks, 'JWKS must contain a keys array' unless jwks_hash&.key?('keys')
+        raise InvalidJwks, 'JWKS must be a JSON object' unless jwks_hash.is_a?(Hash)
+        raise InvalidJwks, 'JWKS must contain a keys array' unless jwks_hash.key?('keys')
 
         jwks_hash['keys'].map { |key_data| JWT::JWK.import(key_data) }
       rescue JSON::ParserError => e
@@ -46,6 +47,10 @@ module Doorkeeper
             end
 
             parsed = JSON.parse(jwks)
+            unless parsed.is_a?(Hash)
+              errors.add(:jwks, 'must be a JSON object')
+              return
+            end
             errors.add(:jwks, 'must have a keys array') unless parsed.key?('keys')
           rescue JSON::ParserError
             errors.add(:jwks, 'must be valid JSON')
